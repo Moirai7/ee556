@@ -1,0 +1,65 @@
+\documentclass[a4paper]{article} 
+\input{head}
+\begin{document}
+
+%-------------------------------
+%	TITLE SECTION
+%-------------------------------
+
+\fancyhead[C]{}
+\hrule \medskip % Upper rule
+\begin{minipage}{0.295\textwidth} 
+\raggedright
+\footnotesize
+
+\end{minipage}
+\begin{minipage}{0.4\textwidth} 
+\centering 
+\large 
+EE 556 Project\\ 
+\normalsize 
+\end{minipage}
+\begin{minipage}{0.295\textwidth} 
+\raggedleft
+\today\hfill\\
+\end{minipage}
+\medskip\hrule 
+\bigskip
+
+%-------------------------------
+%	CONTENTS
+%-------------------------------
+
+\section{Code}
+
+Please download the folder `556project' from canvas. The code is implemented in Matlab.
+
+\subsection{Requirements}
+Matlab 2020b (Other version may also work)
+
+Deep Learning toolbox installed in Matlab.
+
+
+
+
+\subsection{Description}
+
+There are 4 files in the `556project' folder. `data.mat' stores the MNIST training and test data, `net.mat' stores the data and trained network. Using `network.m', we can load the data and train a CNN. `test.m' provides the code for getting network outputs, showing images, calculating accuracy.
+
+\subsection{MNIST dataset}
+
+In this project, the MNIST dataset is used, MNIST is a hand write digit dataset. There are 60000 images in the training set and 10000 images in the test set. The sizes of all the images are 28 * 28.
+the dataset is available in the following link:
+
+http://yann.lecun.com/exdb/mnist/
+
+However, we downloaded the dataset and processed it, so that we can easily use in Matlab. The processed dataset is stored in `data.mat'.
+
+
+4 variables are stored in `data.mat': `trainX'(training images), `trainY'(training labels), `testX'(test images), `testY'(test labels).  
+
+\subsection{Question}
+If you have any question about the code, please send an email to hzw81@psu.edu
+
+
+\end{document}

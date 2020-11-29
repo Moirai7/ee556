@@ -7,7 +7,11 @@ testX = d.testX;
 trainY = d.trainY;
 testY = d.testY;
 %plot one training image
-imshow(trainX(:,:,:,1));
+imshow(testX(:,:,:,1));
+
+%adjust_trainX = double(trainX) / 255. - 0.5;
+%adjust_testX = double(testX) / 255. - 0.5;
+%imshow(cast(round((adjust_testX(:,:,:,1)+0.5)*255),'uint8'));
 % define the cnn
 layers = [
     imageInputLayer([28 28 1])
@@ -27,7 +31,7 @@ layers = [
     convolution2dLayer(3,64,'Padding',1)
     batchNormalizationLayer
     reluLayer
-	
+    
     fullyConnectedLayer(10)
     softmaxLayer
     classificationLayer];
@@ -41,7 +45,7 @@ options = trainingOptions( 'sgdm',...
 
 
 %train the network
-net = trainNetwork(trainX, categorical(trainY), layers, options);	
+net = trainNetwork(adjust_trainX, categorical(trainY), layers, options);	
 
 % save all the variables
 save net;

@@ -33,22 +33,22 @@ EE 556 Project\\
 %-------------------------------
 
 \section{Code}
-In this project, I implement the ZOO attacks in matlab to evade a DNN model trained on the MNIST dataset(source code: \href{https://github.com/Moirai7/ee556/}{Github}).
+In this project, I implement the ZOO attacks in Matlab to evade a DNN model trained on the MNIST dataset(source code: \href{https://github.com/Moirai7/ee556/}{Github}).
 
-The key idea of the ZOO attacks is to estimate the gradient of a black-box model. The approximate gradient  is computed with zeroth order optimation method instead of using the actual back propagation on the targeted model. 
+The key idea of the ZOO attacks is to estimate the gradient of a black-box model. The approximate gradient is computed with the zeroth-order optimation method instead of using the actual backpropagation on the targeted model. 
 
-First, for targeted attack, the loss function is 
+First, for a targeted attack, the loss function is 
 \begin{equation}
 f(x,t) = max\{max_{i\neq t}log[F(x)]_i - log[F(x)]_t, 0\}
 \end{equation} 
-Minimizing the loss function requires to attains the highest confidnce score for the targeted class $t$.
+Minimizing the loss function requires to attains the highest confidence score for the targeted class $t$.
 
 Then, ZOO attacks use the symmetric difference quotient to estimate the gradient on the loss function.
 \begin{equation}
 g_i = \frac{\partial f(x)}{\partial x_i} = \frac{f(x+he_i)-f(x-he_i)}{2h}
 \end{equation}
 
-To reduce the computational complexity, I implemented two algorithms ZOO-ADAM and ZOO-Newton proposed by \cite{1}. Both of them first randomly pick a batch of coorinates. Then ZOO-ADAM method calculates the first-order of the loss function to compute the best coordinate update. Meanwhile, the ZOO-Newtion method caculate the graident and Hessian for $x_i$ to update the coordinate.
+To reduce the computational complexity, I implemented two algorithms ZOO-ADAM and ZOO-Newton proposed by \cite{1}. Both of them first randomly pick a batch of coordinates. Then ZOO-ADAM method calculates the first-order of the loss function to compute the best coordinate update. Meanwhile, the ZOO-Newton method calculates the gradient and Hessian for $x_i$ to update the coordinate.
 
 
 \section{Result}
@@ -57,8 +57,8 @@ To reduce the computational complexity, I implemented two algorithms ZOO-ADAM an
 \subsection{Attack Rates}
 It takes a long time to calculate the adversarial samples on the whole test dataset(about one day for 300 adversarial samples on my computer). To evaluate the performance of the attack methods, I first selected 1000 images that could be correctly classified as their true labels and randomly select a target label. \textbf{The success attack rate of both algorithms are 100\%. }
 
-Then I evaluted the attack rate for different target labels.
-I selected 200 images and  generated 9 adversarial samples for each images with target classes that is different from their true lables. Table \ref{ar} shows the attack success rate with those two attack methods. Both of them can reach 100\% attack rate with all target classes. 
+Then I evaluated the attack rate for different target labels.
+I selected 200 images and generated 9 adversarial samples for each image with target classes that are different from their true labels. Table \ref{ar} shows the attack success rate with those two attack methods. Both of them can reach a 100\% attack rate with all target classes. 
 
 \begin{table}[h]
 \centering
@@ -81,13 +81,12 @@ Target Label&ZOO-ADAM&ZOO-Newton\\
 \label{ar}
 \caption{Attack Rate}
 \end{table}
-In practice, ZOO-ADAM method is faster than ZOO-Newton method.
-\textbf{For ZOO-ADAM attack the average number of classifer queries to achieve a successful attack is 883.8.
-For ZOO-Newton attack the average number of queries is 1471.1. }Each query randomly selects 128 coordinates to update.
+In practice, the ZOO-ADAM method is faster than the ZOO-Newton method.
+\textbf{For ZOO-ADAM attack the average number of classifier queries to achieve a successful attack is 883.8.
+For the ZOO-Newton attack, the average number of queries is 1471.1. }Each query randomly selects 128 coordinates to update.
 
 
-As shown in Fig.\ref{ae}, human can see there are some noises on the adversarial samples but we still can identify true labels for those generated samples. \textbf{Generally, the adversarial samples are imperceptile.}
-
+As shown in Fig.\ref{ae}, the human can see there are some noises on the adversarial samples but we still can identify true labels for those generated samples. \textbf{Generally, the adversarial samples are imperceptible.}
 \begin{figure}
 \centering
 \includegraphics[scale=0.3]{resjpg.jpg}
@@ -97,9 +96,8 @@ As shown in Fig.\ref{ae}, human can see there are some noises on the adversarial
 
 \subsection{Defense}
 One way to defend against this attack is to train another model to differentiate the adversarial samples.
-I trained an neural networks using the same architeture as the classification model. 70\% generated adversarial examples and their corresponding original images are used for training and others are used to test the model. 
-Figure \ref{roc} is the performance of the detection model. \textbf{The AUC of the model for the ZOO-ADAM attack on the test dataset is 95.36\%. For the ZOO-Newton attack it is 94.74\%}.
-
+I trained neural networks using the same architecture as the classification model. 70\% generated adversarial examples and their corresponding original images are used for training and others are used to test the model. 
+Figure \ref{roc} is the performance of the detection model. \textbf{The AUC of the model for the ZOO-ADAM attack on the test dataset is 95.36\%. For the ZOO-Newton attack, it is 94.74\%}.
 
 \begin{figure}
 \centering
@@ -117,8 +115,7 @@ Figure \ref{roc} is the performance of the detection model. \textbf{The AUC of t
 \end{minipage}
 \end{figure}
 
-
-For the MNIST dataset, I found the generate samples have an obvious characteristic. Clearly, there are more pixels with gray color in adversarial samples. Fig. \ref{freq2} is the frequency of 256 different intensities in 200 original samples and 200 adversarial samples. If we filter out the white(256) and black(0), the differences between the generated samples and the original samples are more significant as shown in Fig. \ref{freq}.
+For the MNIST dataset, I found the generate samples have an obvious characteristic. There are more pixels with the gray color in adversarial samples. Fig. \ref{freq2} is the frequency of 256 different intensities in 200 original samples and 200 adversarial samples. If we filter out the white(256) and black(0), the differences between the generated samples and the original samples are more significant as shown in Fig. \ref{freq}.
 \begin{figure}
 \centering
 \begin{minipage}[t]{0.45\textwidth}
@@ -136,11 +133,10 @@ For the MNIST dataset, I found the generate samples have an obvious characterist
 \end{figure}
 
 So we could calculate the ratio of "gray color" (intensities from 2 to 90) in one unknown image to detect the attack.
-First we use 70\% generated adversarial examples and their corresponding original images to define the threshold that would be classified as attacks. Figure \ref{freq3} is the ratio of gray color in original images and adversarial images. Based on the statical analysis, we simply define following decision rules: if the ratio is more than 9\%, we can classified the images as attacks with 100\%; if the ratio is more than 6\% and less than 9\%, the probability the image is not an generated images is 70\%; if it is more than 2\% and less than 6\%, the probability the image is not an generated images is 90\%; otherwise, the probability the image is not an generated images is 70\%.
+First, we use 70\% generated adversarial examples and their corresponding original images to define the threshold that would be classified as attacks. Figure \ref{freq3} is the ratio of gray color in original images and adversarial images. Based on the statical analysis, we simply define the following decision rules: if the ratio is more than 9\%, we can classify the images as attacks with 100\%; if the ratio is more than 6\% and less than 9\%, the probability the image is not an adversarial example is 70\%; if it is more than 2\% and less than 6\%, the probability the image is not an adversarial example is 90\%; otherwise, the probability the image is not an adversarial example is 70\%.
 
-Then we use this simple rules to calculate the AUC on the test dataset. Figure \ref{roc2} is the performace of this detection method.
+Then we use these simple rules to calculate the AUC on the test dataset. Figure \ref{roc2} is the performance of this detection method.
 And \textbf{the AUC for the ZOO-ADAM attack is 97.66\%; for the ZOO-Newton attack it is 98.36\%}.
-
 \begin{figure}
 \centering
 \includegraphics[scale=0.5]{freq3.jpg}
